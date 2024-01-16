@@ -2,9 +2,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .models import Project, Pledge
 from .serializers import ProjectSerializer, PledgeSerializer, ProjectDetailSerializer, PledgeDetailSerializer
-from django.http import Http404
+from django.http import Http404, HttpResponseBadRequest
 from rest_framework import status, permissions
-from .permissions import IsOwnerOrReadOnly
+from .permissions import ProjectIsOwnerOrReadOnly, PledgeIsSupporterOrReadOnly
 
 class ProjectList(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
@@ -30,7 +30,7 @@ class ProjectList(APIView):
 class ProjectDetail(APIView):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly, 
-        IsOwnerOrReadOnly,
+        ProjectIsOwnerOrReadOnly,
         ]
 
     def get_object(self, pk):
@@ -90,7 +90,7 @@ class PledgeList(APIView):
 class PledgeDetail(APIView):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
-        IsOwnerOrReadOnly,
+        PledgeIsSupporterOrReadOnly,
         ]
 
     def get_object(self, pk):
@@ -114,6 +114,10 @@ class PledgeDetail(APIView):
             data=request.data,
             partial=True
         )
+        new_object = serializer.child
+        if new_object.amount != pledge.amount:
+            return HttpResponseBadRequest()
+        
         if serializer.is_valid():
             serializer.save()
             return Response(
