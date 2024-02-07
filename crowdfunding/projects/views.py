@@ -64,6 +64,11 @@ class ProjectDetail(APIView):
             status=status.HTTP_405_METHOD_NOT_ALLOWED
         )
     
+    def delete(self, request, pk):
+        project = self.get_object(pk)
+        project.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class PledgeList(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]

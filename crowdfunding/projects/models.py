@@ -34,7 +34,3 @@ class Pledge(models.Model):
     )
 
 
-# class Category(models.Model):
-#     project = models.ManyToManyField('Project')
-#     title = models.CharField(max_length=200)
-#     # need to define the categories
