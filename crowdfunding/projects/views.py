@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import Project, Pledge, Categories
+from .models import Project, Pledge, Category
 from .serializers import ProjectSerializer, PledgeSerializer, ProjectDetailSerializer, PledgeDetailSerializer, CategorySerializer
 from django.http import Http404
 from rest_framework import status, permissions
@@ -11,7 +11,7 @@ class CategoryList(APIView):
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request):
-        categories = Categories.objects.all().order_by('title')
+        categories = Category.objects.all().order_by('title')
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
 
@@ -21,9 +21,9 @@ class CategoryDetail(APIView):
 
     def get_object(self, pk):
         try:
-            category = Categories.objects.get(pk=pk)
+            category = Category.objects.get(pk=pk)
             return category
-        except Categories.DoesNotExist:
+        except Category.DoesNotExist:
             raise Http404
  
     def get(self, request, pk):

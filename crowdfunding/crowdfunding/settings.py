@@ -35,7 +35,7 @@ SECRET_KEY = os.environ.get(
 DEBUG = os.environ.get(
     'DJANGO_DEBUG',
     'False'
-)   != 'False'
+)   == 'False'
 
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
@@ -62,6 +62,7 @@ INSTALLED_APPS = [
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ]
 }
 
